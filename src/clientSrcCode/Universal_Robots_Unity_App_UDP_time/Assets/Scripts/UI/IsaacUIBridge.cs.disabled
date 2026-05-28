@@ -1,0 +1,35 @@
+using UnityEngine;
+using UnityEngine.UI; 
+
+public class IsaacUIBridge : MonoBehaviour
+{
+    [Header("Dependencies")]
+    public IsaacUR3Client client; // Drag the GameObject with IsaacUR3Client here
+
+    [Header("UI Sliders")]
+    public Slider[] jointSliders; // Drag your 6 sliders here (Size 6)
+
+    // Run this when any slider changes (or in Update)
+    public void OnSliderUpdated()
+    {
+        if (client == null) return;
+
+        float[] cmds = new float[6];
+        
+        // Loop through sliders, convert Degrees to Radians, and prepare array
+        for(int i = 0; i < 6; i++) {
+            if (jointSliders[i] != null) {
+                cmds[i] = jointSliders[i].value * Mathf.Deg2Rad;
+            }
+        }
+
+        // Send to Isaac
+        client.SendJoints(cmds);
+    }
+
+    // Optional: Auto-send every frame while dragging for smooth motion
+    void Update() {
+         // You can comment this out if you prefer to use the "OnValueChanged" event
+         OnSliderUpdated(); 
+    }
+}

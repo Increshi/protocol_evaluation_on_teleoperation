@@ -1,0 +1,35 @@
+{
+  "name": "com.unity.webrtc",
+  "displayName": "WebRTC",
+  "version": "3.0.0-pre.8",
+  "unity": "2020.3",
+  "description": "The WebRTC package provides browsers and mobile applications with Real-Time Communications (RTC) capabilities.",
+  "keywords": [
+    "webrtc",
+    "web"
+  ],
+  "dependencies": {
+    "com.unity.modules.jsonserialize": "1.0.0",
+    "com.unity.editorcoroutines": "1.0.0",
+    "com.unity.modules.audio": "1.0.0"
+  },
+  "samples": [
+    {
+      "displayName": "Example",
+      "description": "WebRTC sample",
+      "path": "Samples~"
+    }
+  ],
+  "_upm": {
+    "changelog": "### Changed\n- doc: improve the API doc of CameraExtension \n- doc: improve the API doc of RTCSessionDescription\n- doc: improve the API doc of RTCDataChannel\n- doc: Improve the API doc of RTCConfiguration\n- doc: Improve the API doc of RTCRtpEncodingParameters\n- doc: Improve the API doc of RTCRtpSender\n- doc: Improve the API doc of RTCRtpTransceiver\n- doc: Improve the API doc of WebRTC\n- doc: Improve the API doc of AudioStreamTrack\n- doc: Improve the API doc of VideoStreamTrack\n- doc: Improve the API doc of MediaStreamTrack\n- doc: Improve the API doc of MediaStream\n- doc: Improve the API doc of RTCPeerConnection\n- doc: Improve the API doc of RTCIceServer"
+  },
+  "upmCi": {
+    "footprint": "0c3a634ebf52e87b520e03b428bff89ae9a90d13"
+  },
+  "documentationUrl": "https://docs.unity3d.com/Packages/com.unity.webrtc@3.0/manual/index.html",
+  "repository": {
+    "url": "https://github.com/Unity-Technologies/com.unity.webrtc.git",
+    "type": "git",
+    "revision": "5ee62d59bb59693d9f54f7e3c04c492fe419fa65"
+  }
+}
