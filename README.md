@@ -7,6 +7,11 @@ This project evaluates the impact of underlying network protocol choices (TCP, U
 
 The project tests pure TCP/UDP flows alongside WebRTC DataChannels configured to mimic reliable (TCP-like) and unreliable (UDP-like) transfer characteristics. The experiments introduce real-world mobile network traces to evaluate how these protocols perform under degraded conditions (like limited throughput and packet loss).
 
+## Project Structure
+- **Server-side code:** All backend Python scripts and Isaac Sim server logic are present in `src/serverSrcCode`.
+- **Client-side code:** The front-end Unity application is present in `src/clientSrcCode`.
+- **Analysis scripts:** Python scripts and Jupyter notebooks for analyzing PCAP data, plotting drift, and generating summary tables are located in the `scripts/` folder.
+
 ## Setup Instructions
 
 ### Prerequisites
