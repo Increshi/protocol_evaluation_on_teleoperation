@@ -15,7 +15,7 @@ The project tests pure TCP/UDP flows alongside WebRTC DataChannels configured to
 ## Setup Instructions
 
 ### Prerequisites
-- **Unity:** Unity Editor (2022.3 or newer recommended) for the client application.
+- **Unity:** Unity Editor (2022.3.2f1 recommended) for the client application.
 - **Isaac Sim:** NVIDIA Omniverse Isaac Sim for the robot simulation side.
 - **Python 3.8+:** For running the server-side logic and network emulation.
 - **Python Packages:** `aiortc`, `websockets`, `numpy`, `pandas` (for analysis).
@@ -56,10 +56,10 @@ The experiments evaluate different protocol combinations under baseline (perfect
 
 ### Protocol Configurations
 We test both Pure Socket and WebRTC-emulated combinations:
-- **C-TCP / S-TCP:** Commands Reliable / State Reliable (High accuracy, High Jitter)
-- **C-TCP / S-UDP:** Commands Reliable / State Unreliable (High accuracy, Low Jitter - **The Hybrid Ideal**)
-- **C-UDP / S-TCP:** Commands Unreliable / State Reliable (Drift prone, High Jitter)
-- **C-UDP / S-UDP:** Commands Unreliable / State Unreliable (Drift prone, Low Jitter)
+- **C-TCP / S-TCP:** Commands Reliable / State Reliable (High accuracy, High Network RTT)
+- **C-TCP / S-UDP:** Commands Reliable / State Unreliable (High accuracy, Low Network RTT - **The Hybrid Ideal**)
+- **C-UDP / S-TCP:** Commands Unreliable / State Reliable (Drift prone, High Network RTT)
+- **C-UDP / S-UDP:** Commands Unreliable / State Unreliable (Drift prone, Low Network RTT)
 
 *(Note: In WebRTC, C-TCP is emulated using `ordered=True, maxRetransmits=null`, and S-UDP is emulated using `ordered=False, maxRetransmits=0`).*
 
@@ -73,20 +73,20 @@ To run a test block:
 1. Start `tc_replay.py` applying the chosen network variant.
 2. Ensure the Unity client code (from `src/clientSrcCode`) matches the target behavior (e.g., C-tcp/S-udp).
 3. Connect and execute the `continuous_send` routine.
-4. CSV logs recording timestamps (T6/T7) and calculated `_stateJitterMs` will be generated locally. 
+4. CSV logs recording timestamps (T6/T7) and calculated `Network RTT` will be generated locally. 
 
 ## Results Summary
 
 By analyzing the generated logs against the induced packet loss:
 
 1. **Visual Continuity (State Flow):** 
-   - TCP configurations suffer from Head-of-Line (HoL) blocking. Lost packets cause the entire stream to halt pending retransmissions, leading to massive spikes in State Jitter. Visuals freeze and stutter.
-   - UDP and WebRTC-Unreliable configurations simply drop the stale packet and render the subsequent fresh packet smoothly with minimal jitter. 
+   - TCP configurations suffer from Head-of-Line (HoL) blocking. Lost packets cause the entire stream to halt pending retransmissions, leading to massive spikes in Network RTT. Visuals freeze and stall.
+   - UDP and WebRTC-Unreliable configurations simply drop the stale packet and render the subsequent fresh packet smoothly with bounding maximum latency. 
 2. **Operational Safety / Drift (Command Flow):**
    - UDP configurations fail to deliver 100% of Delta commands under packet loss. The Unity client assumes the command fired, but the robot misses it, leading to permanent desynchronization (positional error/drift).
    - TCP and WebRTC-Reliable configurations successfully retransmit dropped commands. While commands may take slightly longer to arrive, positional error remains at 0.
 
-**Conclusion:** Using reliable transport (TCP-like) for states ruins visualization, and using unreliable transport (UDP-like) for commands is dangerous for precise control. A Hybrid WebRTC approach utilizing customized DataChannels (Reliable for Commands, Unreliable for State) yields the best QoE, guaranteeing both safety and smooth visual feedback.
+**Conclusion:** Using reliable transport (TCP-like) for states ruins visualization due to unbounded Network RTT, and using unreliable transport (UDP-like) for commands is dangerous for precise control. A Hybrid WebRTC approach utilizing customized DataChannels (Reliable for Commands, Unreliable for State) yields the best QoE, guaranteeing both safety and low latency visual feedback.
 
 ## LLM Usage Disclosure
 Large Language Models (LLMs) were utilized during the development of this project for generating boilerplate code, assisting with the network protocol behavior emulation logic, configuring `.gitignore` files, and generating formatting for documentation files and reports.
