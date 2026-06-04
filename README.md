@@ -75,18 +75,4 @@ To run a test block:
 3. Connect and execute the `continuous_send` routine.
 4. CSV logs recording timestamps (T6/T7) and calculated `Network RTT` will be generated locally. 
 
-## Results Summary
 
-By analyzing the generated logs against the induced packet loss:
-
-1. **Visual Continuity (State Flow):** 
-   - TCP configurations suffer from Head-of-Line (HoL) blocking. Lost packets cause the entire stream to halt pending retransmissions, leading to massive spikes in Network RTT. Visuals freeze and stall.
-   - UDP and WebRTC-Unreliable configurations simply drop the stale packet and render the subsequent fresh packet smoothly with bounding maximum latency. 
-2. **Operational Safety / Drift (Command Flow):**
-   - UDP configurations fail to deliver 100% of Delta commands under packet loss. The Unity client assumes the command fired, but the robot misses it, leading to permanent desynchronization (positional error/drift).
-   - TCP and WebRTC-Reliable configurations successfully retransmit dropped commands. While commands may take slightly longer to arrive, positional error remains at 0.
-
-**Conclusion:** Using reliable transport (TCP-like) for states ruins visualization due to unbounded Network RTT, and using unreliable transport (UDP-like) for commands is dangerous for precise control. A Hybrid WebRTC approach utilizing customized DataChannels (Reliable for Commands, Unreliable for State) yields the best QoE, guaranteeing both safety and low latency visual feedback.
-
-## LLM Usage Disclosure
-Large Language Models (LLMs) were utilized during the development of this project for generating boilerplate code, assisting with the network protocol behavior emulation logic, configuring `.gitignore` files, and generating formatting for documentation files and reports.
